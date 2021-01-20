@@ -13,3 +13,10 @@ De mentionat, pentru codul de antrenare am urmat ghidul domnului John Bullinaria
 Aici este link-ul lucrarii domnului John Bullinaria: https://www.cs.bham.ac.uk/~jxb/INC/nn.html
 
 Am studiat codul dansului, am facut adaptarile necesare si am implementat.
+
+Performanta robotului este scazuta din cauza echipamentului imprecis si structura mecanica: 
+
+   -apar erori de odometrie din cauza rezolutiei extrem de scazuta a "encoderului"
+   -numarul senzorilor cu ultrasunete si felul in care sunt montati creeaza multe unghiuri moarte in care masina nu depisteaza obstacole
+   -chiar daca tensiunea furnizata motoarelor dc este aceeasi cateodata unul se invarte mai repede ca altul ceea ce face ca masina sa curbeze putin si sa nu mentina o directie corespunzatoare
+                                              
