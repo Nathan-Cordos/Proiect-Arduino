@@ -205,8 +205,8 @@ void stop_m()
 
 void avoid_right()
 {
-  correct_x = false;
-  correct_y = false;
+  correct_x = false; //assume angle is wrong after avoiding
+  correct_y = false; //assume angle is wrong after avoiding
   m1.setSpeed(0);
   m1.run(RELEASE);
   m2.run(RELEASE);
@@ -248,9 +248,8 @@ void go_back()
 }
 
 void avoid_left()
-{ correct_x = false;
-  correct_y = false;
-  Serial.print("AM AJUNS LA AVOID!: ");
+{ correct_x = false; //assume angle is wrong after avoiding
+  correct_y = false; //assume angle is wrong after avoiding
   m2.setSpeed(0);
   m1.run(RELEASE);
   m2.run(RELEASE);
@@ -309,7 +308,7 @@ void correct_angle_y()
 
 }
 
-  double forward_pass()
+  double forward_pass() // propagate inputs through neural network
   {
     int i,j;
     cmp= 0;
@@ -336,9 +335,9 @@ void correct_angle_y()
     cmp = 0;
     for(i = 1;i<4;i++)
     {
-    if(OUT[i]>cmp){ret =i;cmp = OUT[i];}
+    if(OUT[i]>cmp){ret =i;cmp = OUT[i];}//remember index
     }
     
-  return cmp;
+  return cmp; //return highest value output
   }
  
