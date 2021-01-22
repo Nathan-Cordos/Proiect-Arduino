@@ -1,5 +1,7 @@
 Proiectul consta intr-un robot arduino (o masinuta) care navigheaza de la un punct definit A la alt punct definit B (acestea sunt definite in program prin coordonate x,y), isi calculeaza si tine minte pozitia iar in timpul miscarii evita obstacole.
 
+Motoarele DC sunt controlate folosind un motor shield de la Adafruit si biblioteca asociata acestuia in program.
+
 Pozitia este calculata si updatata folosind niste senzori optici si rotite perforate atasate axului de la motor; acestea impreuna actioneaza ca niste encoderi incrementali, desigur cu o precizie mult, mult mai scazuta. In program numararea de impulsuri este implementata folosind intreruperi (PIN Change intrerrupts) pe grupurile DI 9-13 si A0-A5.
 
 Obstacolele sunt evitate folosind senzori cu ultra sunete, iar implementarea in cod folosete o retea neuronala.
