@@ -2,8 +2,8 @@
 #include<AFMotor.h>
 #include<math.h>
 
-AF_DCMotor m1(1);
-AF_DCMotor m2(2);
+AF_DCMotor m1(1); //declare motor variable for motor1
+AF_DCMotor m2(2); // declare motor variable for motor2
 
 // ultrasonic sensor control variables
 long duration, distance;
@@ -12,20 +12,25 @@ double avoid;
 
 
 //position control variables
-bool x_ok = true, y_ok = true,correct_y = false,correct_x = false;
-bool finished = 0;
-int w1 = 0, w2 = 0, dir_w1 = 1, dir_w2 = 1, x_max, x_min, y_max, y_min;
+bool x_ok = true, y_ok = true,correct_y = false,correct_x = false; // x_ok & y_ok - true when car is still within bounds ; correct_y & correct_x - true when angle of car is correct
+
+bool finished = 0; //true when car has arrived at destination
+
+int w1 = 0, w2 = 0, dir_w1 = 1, dir_w2 = 1, x_max, x_min, y_max, y_min;// w1 ,w2 are counterrs for number of impulses from "encoders", dir_w1/2 stores direction of wheels. x/y_max/min set the destination and bounds of the robot
+
 float c_a,L = 13.2, delta_w1, delta_w2, dist_w1, dist_w2, a = 0, x_new, y_new, x = 0, y = 0, dist_c = 0, a_new = 0;
-volatile int w1_new = 0;
-volatile  int w2_new = 0;
+
+volatile int w1_new = 0; //impulse counter from encoder which is used in interrupt for wheel 1
+
+volatile  int w2_new = 0; //impulse counter from encoder which is used in interrupt for wheel 2
 
 //neural net variables
-double WeightsIH[3][5] = {{-9255963134931783073683178320070.000000, 1.808334 , 2.480664 ,0.130021, 3.850493},
+double WeightsIH[3][5] = {{-9255963134931783073683178320070.000000, 1.808334 , 2.480664 ,0.130021, 3.850493}, //weights for input to hidden layer
                         {-9255963134931783073683178320070.000000, 8.666030, 2.541510 , -9.785462 ,-15.949171 }, 
                         {-9255963134931783073683178320070.000000 ,-12.373568 , -8.841073 , 9.732523 , 7.803736}};
 
 double WeightsHO[5][4] = {
-                      {-9255963134931783073683178320070.000000 , -0.213017 ,-6.880391 ,4.745813  },
+                      {-9255963134931783073683178320070.000000 , -0.213017 ,-6.880391 ,4.745813  }, //weights for hidden to output layer
                       {-9255963134931783073683178320070.000000 ,  12.185216 , -9.849756 , -4.594255},
                       {-9255963134931783073683178320070.000000 ,  3.545055 , -7.271459 , -6.668053  },
                       {-9255963134931783073683178320070.000000 ,-11.524251 , 6.865472 , 1.455714  },
@@ -39,11 +44,11 @@ void setup() {
   pinMode(A1,INPUT);
   pinMode(A5,OUTPUT);
   pinMode(A4,OUTPUT);
-  cli();
+  cli(); //disable all interrupt function
   PCICR |= 0b00000011; // activate Analog and second batch of DI, intrerrupt vectors
   PCMSK1 |= 0b00000001;// A0
   PCMSK0 |= 0b00000010;// DI - 9
-  sei();
+  sei(); //enable all interrupt function
   a = 0;
   x_min =-30;
   x_max =100;
@@ -68,10 +73,10 @@ duration=pulseIn(A2, HIGH);
 distance =(duration/2)/29.1;
 mapped_distance = 10/distance;
 
-if(mapped_distance > 1)mapped_distance = 1;
+if(mapped_distance > 1)mapped_distance = 1; // if distance to foreign object is closer than or equal to 10cm
 if(mapped_distance < 0.9) mapped_distance = 0;
 
-INP[1] = mapped_distance;
+INP[1] = mapped_distance; //the input in the neural net will be equal to mapped_distance
 
 digitalWrite(A5,HIGH);
 delayMicroseconds(1000);
@@ -80,7 +85,7 @@ duration=pulseIn(A1, HIGH);
 distance =(duration/2)/29.1;
 mapped_distance = 10/distance;
 
-INP[2] = mapped_distance;
+INP[2] = mapped_distance; //the input in the neural net will be equal to mapped_distance
 
 avoid = forward_pass();
 
@@ -179,7 +184,7 @@ else
 
 }
 
-ISR(PCINT0_vect) //intrerrupts which are triggered from position 
+ISR(PCINT0_vect) 
 {
   if(dir_w1 == 1)w1_new++;
 
